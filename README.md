@@ -52,7 +52,7 @@ Open **http://localhost:3000** in your browser.
 
 ## 📸 Screenshots
 
-![TaskFlow Screenshot](/screenshot.png)
+![TaskFlow Screenshot](./screenshot.png)
 
 ---
 
