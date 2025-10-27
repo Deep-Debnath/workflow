@@ -52,14 +52,15 @@ Open **http://localhost:3000** in your browser.
 
 ## 📸 Screenshots
 
-![TaskFlow Screenshot](./public/screenshot.png)
+![TaskFlow Screenshot](./public/screenshot_1.png)
+![TaskFlow Screenshot](./public/screenshot_2.png)
 
 ---
 
 ## 🧑‍💻 Author
 
 **Deep Debnath**  
-Frontend Developer • React / Next.js / UI / AI Integration  
+Frontend Developer • React / Next.js / UI / AI Integration
 
 🌐 [Portfolio](https://my-portfolio-ob9g.vercel.app/)  
 💼 [GitHub](https://github.com/Deep-Debnath)
