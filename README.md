@@ -62,9 +62,3 @@ Open **http://localhost:3000** in your browser.
 Frontend Developer • React / Next.js / UI / AI Integration  
 🌐 [Portfolio](https://github.com/Deep-Debnath/my-portfolio)  
 💼 [GitHub](https://github.com/Deep-Debnath)
-
----
-
-## 🪪 License
-
-This project is licensed under the **MIT License** — feel free to use and modify it.
