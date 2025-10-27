@@ -52,7 +52,7 @@ Open **http://localhost:3000** in your browser.
 
 ## 📸 Screenshots
 
-![TaskFlow Screenshot](/screenshot.png)
+![TaskFlow Screenshot](./public/screenshot.png)
 
 ---
 
@@ -60,5 +60,6 @@ Open **http://localhost:3000** in your browser.
 
 **Deep Debnath**  
 Frontend Developer • React / Next.js / UI / AI Integration  
-🌐 [Portfolio](https://github.com/Deep-Debnath/my-portfolio)  
+
+🌐 [Portfolio](https://my-portfolio-ob9g.vercel.app/)  
 💼 [GitHub](https://github.com/Deep-Debnath)
