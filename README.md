@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧩 TaskFlow — Workflow Management App
 
-## Getting Started
+🚀 **Live Demo:** [https://workflow-gilt-five.vercel.app/]
 
-First, run the development server:
+TaskFlow is a modern workflow and task management web app built with **Next.js**, **Redux Toolkit**, and **Material-UI**. It helps users create, organize, and track tasks efficiently with smooth animations powered by **Framer Motion**. All data is persisted locally using **localStorage** for a seamless experience.
+
+---
+
+## ✨ Features
+
+- ✅ Add, edit, and delete tasks
+- 🔍 Filter tasks by status (incomplete, completed, all)
+- ⏫ Sort tasks by priority
+- 💾 Persistent storage using localStorage
+- ⚡ Inline task editing
+- 🎨 Modern, responsive UI with MUI
+- 🌀 Smooth animations with Framer Motion
+- 🧠 State management using Redux Toolkit
+
+---
+
+## 🧰 Tech Stack
+
+- **Next.js 14+**
+- **Redux Toolkit**
+- **Material-UI (MUI)**
+- **Framer Motion**
+- **localStorage**
+- **JavaScript (ES6+)**
+
+---
+
+## ⚙️ Installation & Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/Deep-Debnath/workflow
+
+# Navigate to the app directory
+cd my-app
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:3000** in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📸 Screenshots
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+![TaskFlow Screenshot](/screenshot.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🧑‍💻 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Deep Debnath**  
+Frontend Developer • React / Next.js / UI / AI Integration  
+🌐 [Portfolio](https://github.com/Deep-Debnath/my-portfolio)  
+💼 [GitHub](https://github.com/Deep-Debnath)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🪪 License
+
+This project is licensed under the **MIT License** — feel free to use and modify it.
