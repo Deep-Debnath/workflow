@@ -29,13 +29,13 @@ export const metadata = {
   creator: "Deep Debnath",
   publisher: "TaskFlow",
   metadataBase: new URL(
-    "https://workflow-pabp2okw3-deepvais-projects.vercel.app/"
+    "https://workflow-gilt-five.vercel.app/"
   ),
   openGraph: {
     title: "TaskFlow | Workflow Management App",
     description:
       "Boost productivity with TaskFlow — a clean and powerful workflow management app built using Next.js, Redux Toolkit, and MUI.",
-    url: "https://workflow-pabp2okw3-deepvais-projects.vercel.app/",
+    url: "https://workflow-gilt-five.vercel.app/",
     siteName: "TaskFlow",
     images: [
       {
