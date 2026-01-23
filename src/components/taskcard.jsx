@@ -49,9 +49,9 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      whileTap={{ scale: 0.98 }}
       sx={{
         mb: 1,
+        mx:1,
         px: isMobile ? 1 : 2,
         py: isMobile ? 1 : 1.5,
         borderRadius: "20px",
@@ -62,7 +62,7 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
         alignItems: isMobile ? "flex-start" : "center",
         justifyContent: "space-between",
         gap: isMobile ? 1 : 2,
-        transition: "all 0.3s ease",
+        transition: "all 0.3s inherit",
       }}
     >
       <CardContent sx={{ flexGrow: 1, p: 0 }}>
@@ -117,7 +117,7 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
             minRows={1}
             fullWidth
             size="small"
-            sx={{ mt: 0.5 }}
+            sx={{ mt: 0.5 ,height:"auto"}}
           />
         ) : (
           <Typography

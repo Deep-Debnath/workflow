@@ -6,27 +6,28 @@ const taskSlice = createSlice({
   initialState: {
     allTasks: [],
     filteredTasks: [],
-    filterMode: "incomplete", // "incomplete" → "completed" → "all"
+    filterMode: "all",
     sort: "asc",
   },
   reducers: {
     addtask: (state, action) => {
       state.allTasks.push(action.payload);
       state.filteredTasks = state.allTasks;
+      state.filterMode = "all";
     },
     removetask: (state, action) => {
       state.allTasks = state.allTasks.filter(
-        (task) => task.id !== action.payload
+        (task) => task.id !== action.payload,
       );
       state.filteredTasks = state.filteredTasks.filter(
-        (task) => task.id !== action.payload
+        (task) => task.id !== action.payload,
       );
     },
     togglecomplete: (state, action) => {
       state.allTasks = state.allTasks.map((task) =>
         task.id === action.payload
           ? { ...task, complete: !task.complete }
-          : task
+          : task,
       );
       if (state.filterMode === "completed") {
         state.filteredTasks = state.allTasks.filter((t) => t.complete);
@@ -61,10 +62,10 @@ const taskSlice = createSlice({
     edittasks: (state, action) => {
       const { id, updates } = action.payload;
       state.allTasks = state.allTasks.map((task) =>
-        task.id === id ? { ...task, ...updates } : task
+        task.id === id ? { ...task, ...updates } : task,
       );
       state.filteredTasks = state.filteredTasks.map((task) =>
-        task.id === id ? { ...task, ...updates } : task
+        task.id === id ? { ...task, ...updates } : task,
       );
     },
   },

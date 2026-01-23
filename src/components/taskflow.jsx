@@ -7,7 +7,12 @@ import {
   Button,
   Tooltip,
 } from "@mui/material";
-import { Add, FilterListRounded, SortRounded } from "@mui/icons-material";
+import {
+  Add,
+  FilterListRounded,
+  SortRounded,
+  Person,
+} from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,14 +33,24 @@ export default function TaskFlowApp() {
   const [priority, setPriority] = useState(3);
 
   const { allTasks, filteredTasks, filterMode } = useSelector(
-    (state) => state.tasks
+    (state) => state.tasks,
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
     const saved = localStorage.getItem("item-box");
+
     if (saved) {
-      JSON.parse(saved).forEach((task) => dispatch(addtask(task)));
+      const tasks = JSON.parse(saved);
+
+      const uniqueTasks = tasks.reduce((acc, cur) => {
+        if (!acc.find((t) => t.id === cur.id)) {
+          acc.push(cur);
+        }
+        return acc;
+      }, []);
+
+      uniqueTasks.forEach((task) => dispatch(addtask(task)));
     }
   }, [dispatch]);
 
@@ -64,49 +79,64 @@ export default function TaskFlowApp() {
   const handleSort = () => dispatch(sorttasks());
 
   const getModeLabel = () => {
-    if (filterMode === "completed") return "✅ Completed";
-    if (filterMode === "incomplete") return "🕓 Incomplete";
-    return "📋 All Tasks";
+    if (filterMode === "completed") return "Completed Tasks";
+    if (filterMode === "incomplete") return "Incomplete Tasks";
+    return "All Tasks";
   };
 
   return (
-    <div className="min-h-screen bg-gray-700 flex items-center justify-center">
-      <Container
-        maxWidth="md"
+    <div className="min-h-screen flex items-center justify-center">
+      <Box
         sx={{
-          height: { sm: "90vh", xs: "100vh" },
-          py: 4,
+          width: "100%",
+          height: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Box
-          className="bg-gradient-to-tr from-pink-200 via-yellow-100 to-cyan-200 
-                     w-full h-full rounded-3xl shadow-xl grid grid-rows-[70px_1fr]"
-        >
-          <div className="bg-amber-400 rounded-t-3xl flex flex-col items-center justify-center shadow-md">
+        <Box className="w-full h-full shadow-xl grid grid-rows-[70px_1fr]">
+          <div className="bg-[#1b263b] flex items-center justify-between shadow-md">
             <Typography
               variant="h5"
-              sx={{ fontWeight: 600, color: "#4B2E05", letterSpacing: 1 }}
+              sx={{
+                ml: { sm: 5, xs: 3 },
+                fontWeight: 600,
+                color: "#e0e1dd",
+                letterSpacing: 1,
+              }}
             >
-              🌸 TaskFlow
+              TaskFlow
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: "#4B2E05", fontWeight: 500 }}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={filterMode}
+                transition={{ duration: 0.3 }}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 20, opacity: 0 }}
+              >
+                {getModeLabel()}
+              </motion.div>
+            </AnimatePresence>
+            <Box
+              sx={{
+                mr: { sm: 5, xs: 3 },
+              }}
             >
-              Showing {getModeLabel()}
-            </Typography>
+              <IconButton aria-label="auth">
+                <Person sx={{fontSize:30 , color:"white"}}/>
+              </IconButton>
+            </Box>
           </div>
 
-          <div className="bg-white/50 backdrop-blur-sm rounded-b-3xl m-2 p-1 overflow-y-auto relative">
+          <div className="bg-[#0d1b2a] backdrop-blur-sm pt-2 overflow-y-auto relative">
             <AnimatePresence>
               {filteredTasks.length > 0 ? (
                 filteredTasks.map((task) => (
                   <motion.div
                     key={task.id}
-                    exit={{ opacity: 0, y: -30 }}
+                    exit={{ opacity: 0, y: -30, height: 0 }}
                     transition={{ duration: 0.3 }}
                   >
                     <TaskCard
@@ -117,9 +147,17 @@ export default function TaskFlowApp() {
                   </motion.div>
                 ))
               ) : (
-                <Typography align="center" color="text.secondary">
-                  No {getModeLabel().toLowerCase()} 🌱
-                </Typography>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    className="text-center text-2xl relative top-4"
+                    key={filterMode}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 5, opacity: 0 }}
+                  >
+                    No {getModeLabel().toLowerCase()} 🌱
+                  </motion.div>
+                </AnimatePresence>
               )}
             </AnimatePresence>
           </div>
@@ -134,7 +172,8 @@ export default function TaskFlowApp() {
               justifyContent: "center",
               alignItems: "center",
               gap: 1,
-              zIndex: 5,
+              zIndex: 1,
+              pointerEvents: "none",
             }}
           >
             <Tooltip title="filter" arrow placement="top">
@@ -149,6 +188,7 @@ export default function TaskFlowApp() {
                   background: "linear-gradient(135deg, #ffe0b2, #fff3cd)",
                   boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
                   "&:hover": { transform: "scale(1.05)" },
+                  pointerEvents: "auto",
                 }}
               >
                 <FilterListRounded />
@@ -157,19 +197,24 @@ export default function TaskFlowApp() {
 
             <Button
               onClick={() => setOpen(true)}
-              variant="contained"
               sx={{
                 width: 60,
                 height: 60,
-                borderRadius: "50%",
-                fontSize: 30,
+                borderRadius: "80px",
                 bgcolor: "#fbc02d",
                 color: "white",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                "&:hover": { bgcolor: "#fdd833" },
+                pointerEvents: "auto",
+                "& .icon": {
+                  transition: "transform 0.3s ease",
+                },
+                "&:hover .icon": {
+                  transform: "rotate(45deg)",
+                },
               }}
             >
-              <Add />
+              <Box className="icon">
+                <Add sx={{ fontSize: 30 }} />
+              </Box>
             </Button>
 
             <Tooltip title="sort" arrow placement="top">
@@ -184,6 +229,7 @@ export default function TaskFlowApp() {
                   background: "linear-gradient(135deg, #ffe0b2, #fff3cd)",
                   boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
                   "&:hover": { transform: "scale(1.05)" },
+                  pointerEvents: "auto",
                 }}
               >
                 <SortRounded />
@@ -191,7 +237,7 @@ export default function TaskFlowApp() {
             </Tooltip>
           </Box>
         </Box>
-      </Container>
+      </Box>
 
       {/* Modal */}
       <TaskModal
