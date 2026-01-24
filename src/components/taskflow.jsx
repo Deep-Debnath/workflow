@@ -1,18 +1,5 @@
-// components/TaskFlowApp.jsx
-import {
-  Container,
-  Typography,
-  Box,
-  IconButton,
-  Button,
-  Tooltip,
-} from "@mui/material";
-import {
-  Add,
-  FilterListRounded,
-  SortRounded,
-  Person,
-} from "@mui/icons-material";
+import { Typography, Box, IconButton, B } from "@mui/material";
+import { Person } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,6 +12,7 @@ import {
 import TaskModal from "./taskmodel";
 import TaskCard from "./taskcard";
 import { AnimatePresence, motion } from "framer-motion";
+import FloatingBtns from "./floatingButtons";
 
 export default function TaskFlowApp() {
   const [open, setOpen] = useState(false);
@@ -66,6 +54,7 @@ export default function TaskFlowApp() {
       description,
       complete: false,
       priority,
+      date: Date.now(),
     };
     dispatch(addtask(task));
     setTitle("");
@@ -96,13 +85,13 @@ export default function TaskFlowApp() {
         }}
       >
         <Box className="w-full h-full shadow-xl grid grid-rows-[70px_1fr]">
-          <div className="bg-[#1b263b] flex items-center justify-between shadow-md">
+          <div className="bg-[#070609] border-b-2 border-b-[#1E293B] flex items-center justify-between shadow-md">
             <Typography
               variant="h5"
               sx={{
                 ml: { sm: 5, xs: 3 },
-                fontWeight: 600,
-                color: "#e0e1dd",
+                fontWeight: 700,
+                color: "#FACC15",
                 letterSpacing: 1,
               }}
             >
@@ -125,12 +114,12 @@ export default function TaskFlowApp() {
               }}
             >
               <IconButton aria-label="auth">
-                <Person sx={{fontSize:30 , color:"white"}}/>
+                <Person sx={{ fontSize: 30, color: "#CBD5E1" }} />
               </IconButton>
             </Box>
           </div>
 
-          <div className="bg-[#0d1b2a] backdrop-blur-sm pt-2 overflow-y-auto relative">
+          <div className="bg-[#100D0D] backdrop-blur-sm pt-2 overflow-y-auto relative">
             <AnimatePresence>
               {filteredTasks.length > 0 ? (
                 filteredTasks.map((task) => (
@@ -149,93 +138,24 @@ export default function TaskFlowApp() {
               ) : (
                 <AnimatePresence mode="wait">
                   <motion.div
-                    className="text-center text-2xl relative top-4"
+                    className="text-center text-white sm:text-xl text-md relative top-4"
                     key={filterMode}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 5, opacity: 0 }}
                   >
-                    No {getModeLabel().toLowerCase()} 🌱
+                    No {getModeLabel().toLowerCase()}
                   </motion.div>
                 </AnimatePresence>
               )}
             </AnimatePresence>
           </div>
 
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: { xs: 60, sm: 100 },
-              left: 0,
-              right: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              zIndex: 1,
-              pointerEvents: "none",
-            }}
-          >
-            <Tooltip title="filter" arrow placement="top">
-              <IconButton
-                onClick={handleFilter}
-                sx={{
-                  color: "black",
-                  width: 80,
-                  height: 40,
-                  borderTopLeftRadius: 30,
-                  borderBottomLeftRadius: 30,
-                  background: "linear-gradient(135deg, #ffe0b2, #fff3cd)",
-                  boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
-                  "&:hover": { transform: "scale(1.05)" },
-                  pointerEvents: "auto",
-                }}
-              >
-                <FilterListRounded />
-              </IconButton>
-            </Tooltip>
-
-            <Button
-              onClick={() => setOpen(true)}
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: "80px",
-                bgcolor: "#fbc02d",
-                color: "white",
-                pointerEvents: "auto",
-                "& .icon": {
-                  transition: "transform 0.3s ease",
-                },
-                "&:hover .icon": {
-                  transform: "rotate(45deg)",
-                },
-              }}
-            >
-              <Box className="icon">
-                <Add sx={{ fontSize: 30 }} />
-              </Box>
-            </Button>
-
-            <Tooltip title="sort" arrow placement="top">
-              <IconButton
-                onClick={handleSort}
-                sx={{
-                  color: "black",
-                  width: 80,
-                  height: 40,
-                  borderTopRightRadius: 30,
-                  borderBottomRightRadius: 30,
-                  background: "linear-gradient(135deg, #ffe0b2, #fff3cd)",
-                  boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
-                  "&:hover": { transform: "scale(1.05)" },
-                  pointerEvents: "auto",
-                }}
-              >
-                <SortRounded />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <FloatingBtns
+            handleFilter={handleFilter}
+            handleSort={handleSort}
+            setOpen={setOpen}
+          />
         </Box>
       </Box>
 

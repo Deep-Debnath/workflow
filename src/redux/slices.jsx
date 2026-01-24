@@ -62,10 +62,10 @@ const taskSlice = createSlice({
     edittasks: (state, action) => {
       const { id, updates } = action.payload;
       state.allTasks = state.allTasks.map((task) =>
-        task.id === id ? { ...task, ...updates } : task,
+        task.id === id ? { ...task, ...updates, date: Date.now() } : task,
       );
       state.filteredTasks = state.filteredTasks.map((task) =>
-        task.id === id ? { ...task, ...updates } : task,
+        task.id === id ? { ...task, ...updates, date: Date.now() } : task,
       );
     },
   },
