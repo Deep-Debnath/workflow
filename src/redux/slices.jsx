@@ -7,11 +7,11 @@ const taskSlice = createSlice({
     allTasks: [],
     filteredTasks: [],
     filterMode: "all",
-    sort: "asc",
+    sort: "Date (New)",
   },
   reducers: {
     addtask: (state, action) => {
-      state.allTasks.push(action.payload);
+      state.allTasks.unshift(action.payload);
       state.filteredTasks = state.allTasks;
       state.filterMode = "all";
     },
@@ -38,12 +38,29 @@ const taskSlice = createSlice({
       }
     },
     sorttasks: (state) => {
-      state.sort = state.sort === "asc" ? "desc" : "asc";
+      const order = [
+        "Priority (High)",
+        "Priority (Low)",
+        "Date (New)",
+        "Date (Old)",
+      ];
+
+      const currentIndex = order.indexOf(state.sort);
+      state.sort = order[(currentIndex + 1) % order.length];
 
       state.filteredTasks = [...state.filteredTasks].sort((a, b) => {
-        return state.sort === "asc"
-          ? a.priority - b.priority
-          : b.priority - a.priority;
+        switch (state.sort) {
+          case "Priority (High)":
+            return b.priority - a.priority; // high → low
+          case "Priority (Low)":
+            return a.priority - b.priority; // low → high
+          case "Date (Old)":
+            return a.date - b.date; // oldest first
+          case "Date (New)":
+            return b.date - a.date; // newest first
+          default:
+            return 0;
+        }
       });
     },
 

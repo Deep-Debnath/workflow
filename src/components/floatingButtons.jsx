@@ -5,8 +5,8 @@ export default function FloatingBtns({ handleFilter, handleSort, setOpen }) {
   return (
     <Box
       sx={{
-        position: "absolute",
-        bottom: { xs: 60, sm: 100 },
+        position: "fixed",
+        bottom: { xs: 20, sm: 100 },
         left: 0,
         right: 0,
         display: "flex",
@@ -22,7 +22,7 @@ export default function FloatingBtns({ handleFilter, handleSort, setOpen }) {
           onClick={handleFilter}
           sx={{
             pointerEvents: "auto",
-            scale:{xs:0.9,sm:1},
+            scale: { xs: 0.9, sm: 1 },
             width: 72,
             height: 40,
             borderRadius: "999px",
@@ -44,56 +44,57 @@ export default function FloatingBtns({ handleFilter, handleSort, setOpen }) {
           <FilterListRounded />
         </IconButton>
       </Tooltip>
+      <Tooltip title="add new task" placement="top">
+        <Button
+          onClick={() => setOpen(true)}
+          sx={{
+            pointerEvents: "auto",
+            scale: { xs: 0.9, sm: 1 },
 
-      <Button
-        onClick={() => setOpen(true)}
-        sx={{
-          pointerEvents: "auto",
-            scale:{xs:0.9,sm:1},
+            width: 64,
+            height: 64,
+            borderRadius: "50%",
 
-          width: 64,
-          height: 64,
-          borderRadius: "50%",
+            color: "white",
 
-          color: "white",
+            background: "linear-gradient(135deg, #F59E0B, #FACC15)",
 
-          background: "linear-gradient(135deg, #F59E0B, #FACC15)",
+            // boxShadow: "0 12px 30px rgba(250,204,21,0.55)",
 
-          // boxShadow: "0 12px 30px rgba(250,204,21,0.55)",
+            transition: "all 0.3s ease",
 
-          transition: "all 0.3s ease",
+            "& .icon": {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "transform 0.35s ease",
+            },
 
-          "& .icon": {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "transform 0.35s ease",
-          },
+            "&:hover": {
+              transform: "translateY(-4px) scale(1.08)",
+            },
 
-          "&:hover": {
-            transform: "translateY(-4px) scale(1.08)",
-          },
+            "&:hover .icon": {
+              transform: "rotate(45deg) scale(1.1)",
+            },
 
-          "&:hover .icon": {
-            transform: "rotate(45deg) scale(1.1)",
-          },
-
-          "&:active": {
-            transform: "scale(0.95)",
-          },
-        }}
-      >
-        <Box className="icon">
-          <Add sx={{ fontSize: 30 }} />
-        </Box>
-      </Button>
+            "&:active": {
+              transform: "scale(0.95)",
+            },
+          }}
+        >
+          <Box className="icon">
+            <Add sx={{ fontSize: 30 }} />
+          </Box>
+        </Button>
+      </Tooltip>
 
       <Tooltip title="sort" arrow placement="top">
         <IconButton
           onClick={handleSort}
           sx={{
             pointerEvents: "auto",
-            scale:{xs:0.9,sm:1},
+            scale: { xs: 0.9, sm: 1 },
 
             width: 72,
             height: 40,

@@ -1,4 +1,4 @@
-import { Typography, Box, IconButton, B } from "@mui/material";
+import { Typography, Box, IconButton, B, Popover } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,7 @@ export default function TaskFlowApp() {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(3);
 
-  const { allTasks, filteredTasks, filterMode } = useSelector(
+  const { allTasks, filteredTasks, filterMode, sort } = useSelector(
     (state) => state.tasks,
   );
   const dispatch = useDispatch();
@@ -72,9 +72,14 @@ export default function TaskFlowApp() {
     if (filterMode === "incomplete") return "Incomplete Tasks";
     return "All Tasks";
   };
+  const getSortLabel = () => {
+    // if (sort === "priority") return "By Priority";
+    // if (sort === "date") return "By Date";
+    return sort
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen bg-black flex items-center justify-center">
       <Box
         sx={{
           width: "100%",
@@ -84,7 +89,7 @@ export default function TaskFlowApp() {
           justifyContent: "center",
         }}
       >
-        <Box className="w-full h-full shadow-xl grid grid-rows-[70px_1fr]">
+        <Box className="w-full h-full shadow-xl grid grid-rows-[70px_26px_1fr]">
           <div className="bg-[#070609] border-b-2 border-b-[#1E293B] flex items-center justify-between shadow-md">
             <Typography
               variant="h5"
@@ -97,17 +102,7 @@ export default function TaskFlowApp() {
             >
               TaskFlow
             </Typography>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={filterMode}
-                transition={{ duration: 0.3 }}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 20, opacity: 0 }}
-              >
-                {getModeLabel()}
-              </motion.div>
-            </AnimatePresence>
+
             <Box
               sx={{
                 mr: { sm: 5, xs: 3 },
@@ -118,8 +113,41 @@ export default function TaskFlowApp() {
               </IconButton>
             </Box>
           </div>
+          <div className="bg-[#0B1220] border-b border-[#1E293B] flex items-center justify-center py-2 relative">
+            <div className="absolute left-[50%] -translate-x-full pr-6 w-[140px] text-right">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={filterMode}
+                  initial={{ y: 6, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -6, opacity: 0 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="text-amber-300 font-medium tracking-wide text-sm"
+                >
+                  {getModeLabel()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-          <div className="bg-[#100D0D] backdrop-blur-sm pt-2 overflow-y-auto relative">
+            <span className="text-[#334155] text-sm select-none">•</span>
+
+            <div className="absolute left-1/2 pl-6 w-[140px] text-left">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={sort}
+                  initial={{ y: 6, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -6, opacity: 0 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="text-amber-300 font-medium tracking-wide text-sm"
+                >
+                 By {getSortLabel()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="bg-[#100D0D] backdrop-blur-sm pt-2 overflow-y-auto relative h-full">
             <AnimatePresence>
               {filteredTasks.length > 0 ? (
                 filteredTasks.map((task) => (
@@ -169,6 +197,7 @@ export default function TaskFlowApp() {
         description={description}
         setDescription={setDescription}
         setPriority={setPriority}
+        priority={priority}
       />
     </div>
   );

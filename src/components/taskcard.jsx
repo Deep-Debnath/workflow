@@ -7,11 +7,9 @@ import {
   Chip,
   useMediaQuery,
   TextField,
-  Button,
 } from "@mui/material";
 import {
   CheckBox,
-  CheckCircle,
   Delete,
   RadioButtonUnchecked,
   Star,
@@ -19,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { edittasks } from "@/redux/slices";
 
 const child = {
@@ -37,7 +35,7 @@ const child = {
 };
 
 export default function TaskCard({ task, handleToggle, handleRemove }) {
-  const ratebox = ["low", "mid-low", "mid", "mid-high", "high"];
+  const ratebox = ["low", "low-mid", "mid", "mid-high", "high"];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useDispatch();
@@ -68,7 +66,7 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
 
   return (
     <Card
-      layout
+      layout="position"
       component={motion.div}
       variants={child}
       initial="hidden"
@@ -149,7 +147,7 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
                 content: '""',
                 position: "absolute",
                 left: 0,
-                top: "55%", // perfect strike position
+                top: "50%", // perfect strike position
                 width: "100%", // ✅ EXACT text width
                 height: "2px",
                 backgroundColor: "#9CA3AF",
