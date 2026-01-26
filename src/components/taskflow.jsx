@@ -13,8 +13,12 @@ import TaskModal from "./taskmodel";
 import TaskCard from "./taskcard";
 import { AnimatePresence, motion } from "framer-motion";
 import FloatingBtns from "./floatingButtons";
+import LoginModal from "./login";
+import SignUpModal from "./signup";
 
 export default function TaskFlowApp() {
+  const [login, setLogin] = useState(false);
+  const [signUp, setSignUp] = useState(false);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -73,9 +77,7 @@ export default function TaskFlowApp() {
     return "All Tasks";
   };
   const getSortLabel = () => {
-    // if (sort === "priority") return "By Priority";
-    // if (sort === "date") return "By Date";
-    return sort
+    return sort;
   };
 
   return (
@@ -108,7 +110,7 @@ export default function TaskFlowApp() {
                 mr: { sm: 5, xs: 3 },
               }}
             >
-              <IconButton aria-label="auth">
+              <IconButton aria-label="auth" onClick={() => setLogin(true)}>
                 <Person sx={{ fontSize: 30, color: "#CBD5E1" }} />
               </IconButton>
             </Box>
@@ -141,7 +143,7 @@ export default function TaskFlowApp() {
                   transition={{ duration: 0.18, ease: "easeOut" }}
                   className="text-amber-300 font-medium tracking-wide text-sm"
                 >
-                 By {getSortLabel()}
+                  By {getSortLabel()}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -186,8 +188,17 @@ export default function TaskFlowApp() {
           />
         </Box>
       </Box>
-
       {/* Modal */}
+      <LoginModal
+        open={login}
+        handleClose={() => setLogin(false)}
+        openSignUp={() => setSignUp(true)}
+      />
+      <SignUpModal
+        open={signUp}
+        handleClose={() => setSignUp(false)}
+        openLogin={() => setLogin(true)}
+      />
       <TaskModal
         open={open}
         handleClose={() => setOpen(false)}
