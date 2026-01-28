@@ -15,19 +15,30 @@ import { AnimatePresence, motion } from "framer-motion";
 import FloatingBtns from "./floatingButtons";
 import LoginModal from "./login";
 import SignUpModal from "./signup";
+import LogoutModal from "./logout";
+import { auth } from "@/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function TaskFlowApp() {
   const [login, setLogin] = useState(false);
   const [signUp, setSignUp] = useState(false);
+  const [logout, setLogout] = useState(false);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(3);
+  const [waitforlog, setwaitforlog] = useState(true);
 
   const { allTasks, filteredTasks, filterMode, sort } = useSelector(
     (state) => state.tasks,
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setwaitforlog(false);
+    }, 2000);
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("item-box");
@@ -49,6 +60,16 @@ export default function TaskFlowApp() {
   useEffect(() => {
     localStorage.setItem("item-box", JSON.stringify(allTasks));
   }, [allTasks]);
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleAdd = () => {
     if (!title.trim()) return;
@@ -110,9 +131,48 @@ export default function TaskFlowApp() {
                 mr: { sm: 5, xs: 3 },
               }}
             >
-              <IconButton aria-label="auth" onClick={() => setLogin(true)}>
-                <Person sx={{ fontSize: 30, color: "#CBD5E1" }} />
-              </IconButton>
+              <div className="flex  sm:flex-row items-center gap-2 sm:gap-2 select-none">
+                <label
+                  className="
+                  text-[14px] sm:text-sm text-slate-300 max-w-[90px] truncate text-center sm:text-right"
+                >
+                  {user ? user?.displayName?.toUpperCase() || "User" : "Login"}
+                </label>
+                <IconButton
+                  aria-label="auth"
+                  disabled={waitforlog}
+                  onClick={() => {
+                    user ? setLogout(true) : setLogin(true);
+                  }}
+                  sx={{
+                    bgcolor: user ? "#0F172A" : "rgba(255,255,255,0.05)",
+                    border: user ? "1.5px solid #FACC15" : "1px solid #1E293B",
+                    boxShadow: user
+                      ? "0 0 0 3px rgba(250,204,21,0.15)"
+                      : "none",
+
+                    width: { xs: 36, sm: 42 },
+                    height: { xs: 36, sm: 42 },
+                    transition: "all 0.2s ease",
+
+                    "&:hover": {
+                      bgcolor: user ? "#020617" : "rgba(255,255,255,0.1)",
+                      transform: "translateY(-1px)",
+                    },
+
+                    "&:active": {
+                      transform: "scale(0.96)",
+                    },
+                  }}
+                >
+                  <Person
+                    sx={{
+                      fontSize: { xs: 22, sm: 26 },
+                      color: user ? "#FACC15" : "#CBD5E1",
+                    }}
+                  />
+                </IconButton>
+              </div>
             </Box>
           </div>
           <div className="bg-[#0B1220] border-b border-[#1E293B] flex items-center justify-center py-2 relative">
@@ -189,16 +249,24 @@ export default function TaskFlowApp() {
         </Box>
       </Box>
       {/* Modal */}
-      <LoginModal
-        open={login}
-        handleClose={() => setLogin(false)}
-        openSignUp={() => setSignUp(true)}
-      />
       <SignUpModal
         open={signUp}
         handleClose={() => setSignUp(false)}
         openLogin={() => setLogin(true)}
       />
+      {user ? (
+        <LogoutModal
+          open={logout}
+          handleClose={() => setLogout(false)}
+          userinfo={user}
+        />
+      ) : (
+        <LoginModal
+          open={login}
+          handleClose={() => setLogin(false)}
+          openSignUp={() => setSignUp(true)}
+        />
+      )}
       <TaskModal
         open={open}
         handleClose={() => setOpen(false)}

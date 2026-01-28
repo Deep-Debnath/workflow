@@ -257,10 +257,6 @@ export default function TaskCard({ task, handleToggle, handleRemove }) {
           color={task.complete ? "success" : "default"}
           onClick={() => handleToggle(task.id)}
           sx={{
-            // bgcolor: task.complete
-            //   ? "rgba(34,197,94,0.15)"
-            //   : "rgba(255,255,255,0.04)",
-
             color: task.complete ? "#22C55E" : "#9CA3AF",
             scale: { xs: 0.9, sm: 1 },
 

@@ -14,29 +14,34 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 export default function LoginModal({ open, handleClose, openLogin }) {
   const emailref = useRef();
+  const usernameref = useRef();
   const passwordref = useRef();
+  const password2ref = useRef();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [username, setUsername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [password2, setpassword2] = useState("");
   const [emailError, setEmailError] = useState("");
   const [pwError, setPwError] = useState("");
+  const [pw2Error, setPw2Error] = useState("");
   const [showPassword, setShowpassword] = useState(false);
+  const [submit, setSubmit] = useState(false);
 
   const validationAndSignin = async () => {
     setEmailError("");
     setPwError("");
+    setPw2Error("");
 
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const isPasswordStrong = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(
-      password,
-    );
+    const isPasswordStrong = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/.test(password);
 
     if (!isEmailValid) {
       setEmailError("Invalid email address");
@@ -49,12 +54,38 @@ export default function LoginModal({ open, handleClose, openLogin }) {
     }
 
     if (!isPasswordStrong) {
-      setPwError("6 characters and include a number");
+      setPwError("Use letters & numbers (min 6)");
       return;
     }
 
+    if (password !== password2) {
+      setPw2Error("Password must be same");
+      return;
+    }
+
+    if (!username.trim()) {
+      setPw2Error("Username required");
+      return;
+    }
+
+    if (username.trim().length < 3) {
+      setPw2Error("Username too short");
+      return;
+    }
+
+    setSubmit(true);
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password.trim(),
+      );
+
+      await updateProfile(userCred.user, {
+        displayName: username.trim(),
+      });
+
       handleClose();
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
@@ -62,6 +93,8 @@ export default function LoginModal({ open, handleClose, openLogin }) {
       } else {
         setPwError("Something went wrong. Try again.");
       }
+    } finally {
+      setSubmit(false);
     }
   };
 
@@ -74,7 +107,15 @@ export default function LoginModal({ open, handleClose, openLogin }) {
   }, [open]);
 
   const nextref = (e, next) => {
-    if (!email.trim()) return;
+    if (!email.trim()) {
+      if (e.key === "Enter") {
+        setEmailError("Email cannot be empty");
+      }
+      return;
+    }
+    setEmailError("");
+    setPwError("");
+    setPw2Error("");
     if (e.key === "Enter") {
       e.preventDefault();
       if (next) {
@@ -94,6 +135,8 @@ export default function LoginModal({ open, handleClose, openLogin }) {
         setPwError("");
         setemail("");
         setpassword("");
+        setpassword2("");
+        setUsername("");
       }}
       aria-labelledby="add-task-modal"
       className="flex items-center justify-center"
@@ -130,8 +173,12 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                 size={isMobile ? "small" : "medium"}
                 label="Email"
                 placeholder="Enter Your Email Address"
-                value={email}
-                onChange={(e) => setemail(e.target.value)}
+                value={email.trim()}
+                onChange={(e) => {
+                  setemail(e.target.value);
+
+                  setUsername(e.target.value.split("@")[0]);
+                }}
                 onKeyDown={(e) => nextref(e, passwordref)}
                 sx={{
                   bgcolor: "#020617",
@@ -159,9 +206,9 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                   transition={{ duration: 0.25 }}
                   style={{
                     position: "absolute",
-                    top: isMobile ? "41%" : "43%",
+                    top: isMobile ? "18%" : "20%",
                     right: 0,
-                    fontSize: "0.75rem",
+                    fontSize: "0.8rem",
                     color: "#F87177",
                     pointerEvents: "none",
                   }}
@@ -170,7 +217,6 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                 </motion.div>
               )}
             </AnimatePresence>
-            {/* PASSWORD FIELD */}
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -183,9 +229,9 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                 size={isMobile ? "small" : "medium"}
                 label="Password"
                 placeholder="Enter Your Password"
-                value={password}
+                value={password.trim()}
                 onChange={(e) => setpassword(e.target.value)}
-                onKeyDown={(e) => nextref(e)}
+                onKeyDown={(e) => nextref(e, password2ref)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -217,7 +263,89 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                 }}
               />
             </motion.div>
-
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+            >
+              <TextField
+                type="password"
+                inputRef={password2ref}
+                fullWidth
+                size={isMobile ? "small" : "medium"}
+                label="Confirm Password"
+                placeholder="Confirm Your Password"
+                value={password2.trim()}
+                onChange={(e) => setpassword2(e.target.value)}
+                onKeyDown={(e) => nextref(e, usernameref)}
+                sx={{
+                  bgcolor: "#020617",
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-root": {
+                    color: "#E5E7EB",
+                    "& fieldset": { borderColor: "#1E293B" },
+                    "&:hover fieldset": { borderColor: "#334155" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FACC15",
+                      boxShadow: "0 0 0 1px rgba(250,204,21,0.3)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": { color: "#94A3B8" },
+                  "& .MuiInputLabel-root.Mui-focused": { color: "#FACC15" },
+                }}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <TextField
+                inputRef={usernameref}
+                fullWidth
+                size={isMobile ? "small" : "medium"}
+                label="Username"
+                placeholder="Enter Username"
+                value={username.trim()}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={(e) => nextref(e)}
+                sx={{
+                  bgcolor: "#020617",
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-root": {
+                    color: "#E5E7EB",
+                    "& fieldset": { borderColor: "#1E293B" },
+                    "&:hover fieldset": { borderColor: "#334155" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#FACC15",
+                      boxShadow: "0 0 0 1px rgba(250,204,21,0.3)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": { color: "#94A3B8" },
+                  "& .MuiInputLabel-root.Mui-focused": { color: "#FACC15" },
+                }}
+              />
+            </motion.div>
+            <AnimatePresence>
+              {pw2Error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.25 }}
+                  style={{
+                    position: "absolute",
+                    top: "74%",
+                    right: 0,
+                    fontSize: "0.8rem",
+                    color: "#F87177",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {pw2Error}
+                </motion.div>
+              )}
+            </AnimatePresence>
             <AnimatePresence>
               {pwError && (
                 <motion.div
@@ -227,9 +355,9 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                   transition={{ duration: 0.25 }}
                   style={{
                     position: "absolute",
-                    top: isMobile ? "41%" : "43%",
+                    top: isMobile ? "46%" : "47%",
                     right: 0,
-                    fontSize: "0.75rem",
+                    fontSize: "0.8rem",
                     color: "#F87177",
                     pointerEvents: "none",
                   }}
@@ -264,14 +392,18 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                   handleClose();
                   setEmailError("");
                   setPwError("");
+                  setPw2Error("");
                   setemail("");
                   setpassword("");
+                  setpassword2("");
+                  setUsername("");
                 }}
               >
                 Login
               </button>
             </div>
             <Button
+              disabled={submit}
               variant="contained"
               sx={{
                 bgcolor: "#fbbf24",

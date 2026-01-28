@@ -65,7 +65,7 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setEmailError("Password reset email sent ✅");
+      setEmailError("Password reset email sent");
     } catch (err) {
       setEmailError("Email not found or invalid");
     }
@@ -80,7 +80,14 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
   }, [open]);
 
   const nextref = (e, next) => {
-    if (!email.trim()) return;
+    if (!email.trim()) {
+      if (e.key === "Enter") {
+        setEmailError("Email cannot be empty");
+      }
+      return;
+    }
+    setEmailError("")
+    setPwError("")
     if (e.key === "Enter") {
       e.preventDefault();
       if (next) {
@@ -290,7 +297,7 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
               variant="contained"
               sx={{
                 bgcolor: "#fbbf24",
-                color: "#3b2f00",
+                color: "brown",
                 fontWeight: 600,
                 "&:hover": {
                   bgcolor: "#ffb300",
