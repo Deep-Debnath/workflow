@@ -1,3 +1,5 @@
+//not using currently
+
 import {
   collection,
   addDoc,
@@ -15,7 +17,7 @@ import { db } from "@/firebase";
 export const listenToTasks = (uid, callback) => {
   const q = query(
     collection(db, "users", uid, "tasks"),
-    orderBy("createdAt", "desc")
+    orderBy("createdAt", "desc"),
   );
 
   return onSnapshot(q, (snapshot) => {
