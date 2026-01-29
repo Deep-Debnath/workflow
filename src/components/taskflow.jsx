@@ -19,6 +19,21 @@ import LogoutModal from "./logout";
 import { auth } from "@/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
+import { subscribeTasks } from "@/redux/taskthunk";
+// firestore
+function FirestoreBridge() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (!user) return;
+    const unsub = dispatch(subscribeTasks(user));
+    return () => unsub && unsub();
+  }, [user, dispatch]);
+
+  return null;
+}
+
 export default function TaskFlowApp() {
   const [login, setLogin] = useState(false);
   const [signUp, setSignUp] = useState(false);
@@ -249,6 +264,7 @@ export default function TaskFlowApp() {
         </Box>
       </Box>
       {/* Modal */}
+      <FirestoreBridge />
       <SignUpModal
         open={signUp}
         handleClose={() => setSignUp(false)}
