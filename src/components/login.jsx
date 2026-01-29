@@ -86,8 +86,8 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
       }
       return;
     }
-    setEmailError("")
-    setPwError("")
+    setEmailError("");
+    setPwError("");
     if (e.key === "Enter") {
       e.preventDefault();
       if (next) {
@@ -145,7 +145,7 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
                 label="Email"
                 placeholder="Enter Your Email Address"
                 value={email}
-                onChange={(e) => setemail(e.target.value)}
+                onChange={(e) => setemail(e.target.value.trim())}
                 onKeyDown={(e) => nextref(e, passwordref)}
                 sx={{
                   bgcolor: "#020617",
@@ -198,7 +198,7 @@ export default function LoginModal({ open, handleClose, openSignUp }) {
                 label="Password"
                 placeholder="Enter Your Password"
                 value={password}
-                onChange={(e) => setpassword(e.target.value)}
+                onChange={(e) => setpassword(e.target.value.trim())}
                 onKeyDown={(e) => nextref(e)}
                 InputProps={{
                   endAdornment: (

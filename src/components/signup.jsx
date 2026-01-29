@@ -176,7 +176,6 @@ export default function LoginModal({ open, handleClose, openLogin }) {
                 value={email.trim()}
                 onChange={(e) => {
                   setemail(e.target.value);
-
                   setUsername(e.target.value.split("@")[0]);
                 }}
                 onKeyDown={(e) => nextref(e, passwordref)}
