@@ -2,14 +2,8 @@ import { signOut } from "firebase/auth";
 import { Button, Card, CardActions, Modal, Typography, Avatar } from "@mui/material";
 import { auth } from "@/firebase";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 
 export default function LogoutModal({ open, handleClose, userinfo }) {
-    useEffect(()=>{
-        open&&
-        console.log(userinfo);
-        
-    },[open])
   const handleLogout = async () => {
     try {
       await signOut(auth);
